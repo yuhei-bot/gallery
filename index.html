@@ -11,7 +11,55 @@
       --bg: #fdfcfb;
     }
     body { font-family: sans-serif; color: var(--text); background: var(--bg); margin: 0; }
-    
+
+    /* --- ハンバーガーメニュー --- */
+    .nav-toggle {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      width: 40px;
+      height: 40px;
+      z-index: 3000;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: 50%;
+    }
+    .nav-toggle span {
+      width: 20px;
+      height: 1px;
+      background: var(--text);
+      margin: 3px 0;
+      transition: 0.3s;
+    }
+    /* オープン時のアニメーション */
+    .nav-toggle.active span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .nav-toggle.active span:nth-child(2) { opacity: 0; }
+    .nav-toggle.active span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    .nav-menu {
+      position: fixed;
+      inset: 0;
+      background: rgba(255, 255, 255, 0.95);
+      z-index: 2900;
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    .nav-menu.active { display: flex; animation: fadeIn 0.3s ease; }
+    .nav-menu a {
+      font-size: 1.2rem;
+      color: var(--text);
+      text-decoration: none;
+      margin: 15px 0;
+      letter-spacing: 4px;
+      font-weight: 200;
+    }
+
     /* --- FVエリア --- */
     .gallery-fv {
       height: 40vh;
@@ -24,7 +72,6 @@
       position: relative;
       overflow: hidden;
     }
-    /* 背景に薄くスタイル画像を流す演出 */
     .gallery-fv::before {
       content: "";
       position: absolute;
@@ -34,84 +81,79 @@
       background-position: center;
       opacity: 0.4;
     }
-    .fv-title {
-      position: relative;
-      font-size: 3rem;
-      letter-spacing: 12px;
-      font-weight: 200;
-      margin: 0;
-      text-transform: uppercase;
-    }
-    .fv-subtitle {
-      position: relative;
-      font-size: 0.7rem;
-      letter-spacing: 4px;
-      margin-top: 10px;
-      opacity: 0.8;
-    }
+    .fv-title { position: relative; font-size: 3rem; letter-spacing: 12px; font-weight: 200; margin: 0; }
+    .fv-subtitle { position: relative; font-size: 0.7rem; letter-spacing: 4px; margin-top: 10px; opacity: 0.8; }
 
-    /* フィルター & 検索ボタン */
+    /* フィルター・ギャラリー・モーダル部分は前回を継承（略） */
     .filter-container { padding: 30px 15px; max-width: 600px; margin: 0 auto; margin-top: -30px; position: relative; z-index: 10; }
     .filter-details { background: #fff; border-radius: 15px; border: 1px solid #ddd; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
-    .filter-summary { padding: 15px; cursor: pointer; font-size: 0.8rem; font-weight: bold; text-align: center; list-style: none; color: var(--text); }
+    .filter-summary { padding: 15px; cursor: pointer; font-size: 0.8rem; font-weight: bold; text-align: center; list-style: none; }
     .filter-content { padding: 20px; background: #fff; border-top: 1px solid #eee; }
     .filter-groups-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
     .filter-group p { font-size: 0.7rem; font-weight: bold; color: var(--accent); margin: 0 0 10px; border-bottom: 1px solid #eee; }
     .filter-group label { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; margin-bottom: 8px; cursor: pointer; }
-    .search-btn { background: var(--text); color: #fff; border: none; padding: 14px; border-radius: 35px; width: 100%; font-weight: bold; cursor: pointer; letter-spacing: 2px; }
+    .search-btn { background: var(--text); color: #fff; border: none; padding: 14px; border-radius: 35px; width: 100%; font-weight: bold; cursor: pointer; }
 
-    /* ギャラリー表示 */
     .gallery-container { padding: 10px; max-width: 800px; margin: 0 auto; }
     .gallery-display.is-sliding { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 15px; padding: 20px 0; scrollbar-width: none; }
     .gallery-display.is-sliding::-webkit-scrollbar { display: none; }
     .gallery-display.is-sliding .gallery-item { flex: 0 0 85%; scroll-snap-align: center; }
     .gallery-display.is-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
-    .gallery-item { border-radius: 12px; overflow: hidden; background: #eee; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+    .gallery-item { border-radius: 12px; overflow: hidden; background: #eee; cursor: pointer; }
     .gallery-item img { width: 100%; aspect-ratio: 3/4; object-fit: cover; display: block; }
 
-    /* モーダル（4方向スライダー & アドバイス） */
-    .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 2000; overflow-y: auto; align-items: center; justify-content: center; }
+    /* モーダル */
+    .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 3100; overflow-y: auto; align-items: center; justify-content: center; }
     .modal-inner { width: 95%; max-width: 450px; background: #fff; border-radius: 30px; overflow: hidden; position: relative; margin: 20px auto; }
-    .close-modal { position: absolute; top: 15px; right: 15px; z-index: 2100; cursor: pointer; background: #fff; width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; }
+    .close-modal { position: absolute; top: 15px; right: 15px; z-index: 3200; cursor: pointer; background: #fff; width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; }
     .detail-slider { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; background: #000; }
-    .detail-slider::-webkit-scrollbar { display: none; }
     .detail-slide { flex: 0 0 100%; scroll-snap-align: center; position: relative; }
     .detail-slide img { width: 100%; aspect-ratio: 1/1; object-fit: cover; display: block; }
     .view-label { position: absolute; top: 15px; left: 15px; background: var(--accent); color: #fff; padding: 4px 12px; border-radius: 20px; font-size: 0.7rem; font-weight: bold; }
     .modal-info { padding: 25px; }
-    .modal-title { font-size: 1.2rem; margin: 0 0 10px; color: var(--text); border-bottom: 2px solid var(--accent); display: inline-block; }
-    .modal-desc { font-size: 0.85rem; color: #555; line-height: 1.6; margin-bottom: 20px; }
-    .advice-box { background: #fff9f8; padding: 15px; border-radius: 15px; border-left: 4px solid var(--accent); }
-    .advice-box h4 { font-size: 0.8rem; margin: 0 0 5px; color: var(--accent); }
-    .advice-text { font-size: 0.8rem; line-height: 1.5; margin: 0; }
+    .advice-box { background: #fff9f8; padding: 15px; border-radius: 15px; border-left: 4px solid var(--accent); margin-top: 15px; }
+
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
   </style>
 </head>
 <body>
 
-  <!-- NEW FV SECTION -->
+  <!-- ハンバーガーメニュー -->
+  <div class="nav-toggle" id="nav-toggle" onclick="toggleMenu()">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+
+  <nav class="nav-menu" id="nav-menu">
+    <a href="index.html" onclick="toggleMenu()">HOME</a>
+    <a href="staff.html" onclick="toggleMenu()">STAFF</a>
+    <a href="gallery.html" onclick="toggleMenu()">GALLERY</a>
+    <a href="reserve.html" onclick="toggleMenu()">RESERVE (LINE)</a>
+  </nav>
+
   <div class="gallery-fv">
     <h1 class="fv-title">GALLERY</h1>
     <p class="fv-subtitle">in'dex hair style book</p>
   </div>
 
+  <!-- フィルター・ギャラリーエリア -->
   <div class="filter-container">
     <details class="filter-details" id="filter-details">
-      <summary class="filter-summary">🔍 カテゴリーから探す</summary>
+      <summary class="filter-summary">🔍 STYLE FILTER</summary>
       <div class="filter-content">
         <div class="filter-groups-wrap">
           <div class="filter-group">
             <p>LADIES</p>
             <label><input type="checkbox" class="filter-check" value="short"> ショート</label>
             <label><input type="checkbox" class="filter-check" value="bob"> ボブ</label>
-            <label><input type="checkbox" class="filter-check" value="color"> カラー</label>
           </div>
           <div class="filter-group">
             <p>MENS</p>
-            <label><input type="checkbox" class="filter-check" value="m-short"> ショート</label>
             <label><input type="checkbox" class="filter-check" value="business"> ビジネス</label>
           </div>
         </div>
-        <button class="search-btn" onclick="executeSearch()">スタイルを表示する</button>
+        <button class="search-btn" onclick="executeSearch()">検索する</button>
       </div>
     </details>
   </div>
@@ -125,41 +167,37 @@
     <div class="modal-inner" onclick="event.stopPropagation()">
       <div class="close-modal" onclick="closeModal()">×</div>
       <div class="detail-slider" id="detail-slider"></div>
-      <div style="text-align:center; font-size:0.6rem; color:#999; padding:5px 0;">← スワイプして360°チェック →</div>
       <div class="modal-info">
-        <h3 id="modal-title" class="modal-title"></h3>
-        <p id="modal-desc" class="modal-desc"></p>
+        <h3 id="modal-title" style="margin:0; color:var(--text); font-size:1.1rem;"></h3>
+        <p id="modal-desc" style="font-size:0.8rem; color:#666;"></p>
         <div class="advice-box">
-          <h4>💡 プロのセット術アドバイス</h4>
-          <p id="modal-advice" class="advice-text"></p>
+          <h4 style="margin:0 0 5px; font-size:0.75rem; color:var(--accent);">💡 DAILY ADVICE</h4>
+          <p id="modal-advice" style="font-size:0.75rem; margin:0; line-height:1.5;"></p>
         </div>
       </div>
     </div>
   </div>
 
   <script>
+    // メニュー開閉
+    function toggleMenu() {
+      document.getElementById('nav-toggle').classList.toggle('active');
+      document.getElementById('nav-menu').classList.toggle('active');
+    }
+
+    // データ・検索・スライダー制御（前回同様）
     const galleryData = [
       { 
-        id: 1, tag: "short", title: "シアー・ハンサムショート", 
-        desc: "襟足をタイトに絞り、トップにボリュームを持たせた骨格補正カット。首筋が綺麗に見える「in'dex」のシグネチャースタイルです。",
-        advice: "乾かす時に根元を立ち上げるようにドライヤーを当ててください。少量のバームを襟足から順に揉み込むだけで、艶のある束感が完成します。",
-        images: [
-          "https://images.unsplash.com/photo-1522337660859-02fbefca4702?w=500", // 正面
-          "https://images.unsplash.com/photo-1595476108010-b4d1f8bc2b3f?w=500", // 左
-          "https://images.unsplash.com/photo-1516738901171-8eb4fc13bd20?w=500", // 右
-          "https://images.unsplash.com/photo-1562322140-8baeececf3df?w=500"  // 後
-        ]
+        tag: "short", title: "シアー・ハンサムショート", 
+        desc: "襟足をタイトに絞り、首筋を美しく見せるスタイル。",
+        advice: "朝は根元を濡らして後ろからドライ。少量のバームで仕上げます。",
+        images: ["https://images.unsplash.com/photo-1522337660859-02fbefca4702?w=500", "https://images.unsplash.com/photo-1595476108010-b4d1f8bc2b3f?w=500", "https://images.unsplash.com/photo-1516738901171-8eb4fc13bd20?w=500", "https://images.unsplash.com/photo-1562322140-8baeececf3df?w=500"]
       },
       { 
-        id: 2, tag: "business", title: "アーバン・ビジネスアップバング", 
-        desc: "誠実さと清潔感を両立させたメンズスタイル。サイドを抑えてトップに高さを出すことで、スーツに合う洗練された印象を与えます。",
-        advice: "前髪を上げる際は、根元に熱を当てたあと5秒ほど冷ますと形がしっかり固まります。ハードワックスで束感を作るのがポイントです。",
-        images: [
-          "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500", // 正面
-          "https://images.unsplash.com/photo-1567894340346-7618821b7a8a?w=500", // 左
-          "https://images.unsplash.com/photo-1522337660859-02fbefca4702?w=500", // 右
-          "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=500"  // 後
-        ]
+        tag: "business", title: "ビジネス・アップバング", 
+        desc: "清潔感と誠実さを両立させたスタイル。",
+        advice: "前髪の根元を熱で立ち上げ、冷風で固めると1日キープできます。",
+        images: ["https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500", "https://images.unsplash.com/photo-1567894340346-7618821b7a8a?w=500", "https://images.unsplash.com/photo-1522337660859-02fbefca4702?w=500", "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=500"]
       }
     ];
 
